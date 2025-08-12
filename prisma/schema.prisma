@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  name String
+}
+
+model KanjiWord {
+  id        Int         @id @default(autoincrement())
+  word      String      @unique
+  reading   String
+  meaning   String
+
+  kanjiList KanjiChar[] // 관계 설정
+
+  createdAt DateTime @default(now())
+}
+
+model KanjiChar {
+  id        Int    @id @default(autoincrement())
+  kanji     String
+  onyomi    String
+  kunyomi   String?
+  position  Int    // 1~4번째 위치
+
+  wordId    Int
+  word      KanjiWord @relation(fields: [wordId], references: [id])
+
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,20 @@
+-- CreateTable
+CREATE TABLE "KanjiWord" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "word" TEXT NOT NULL,
+    "reading" TEXT NOT NULL,
+    "meaning" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
+CREATE TABLE "KanjiChar" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "kanji" TEXT NOT NULL,
+    "onyomi" TEXT NOT NULL,
+    "kunyomi" TEXT,
+    "position" INTEGER NOT NULL,
+    "wordId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "KanjiChar_wordId_fkey" FOREIGN KEY ("wordId") REFERENCES "KanjiWord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
