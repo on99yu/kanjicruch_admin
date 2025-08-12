@@ -30,13 +30,14 @@ export default function Loginpage() {
     });
 
     const data = await res.json();
-    setisLoading(false);
     if (res.ok) {
       // 로그인 성공
       router.push("/admin");
+      setisLoading(false);
     } else {
       setError(data.error || "로그인 실패");
     }
+    setisLoading(false);
   };
 
   return (
