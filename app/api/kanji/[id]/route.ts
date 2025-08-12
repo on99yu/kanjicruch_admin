@@ -60,3 +60,18 @@ export async function PUT(
     );
   }
 }
+
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+ const params = await context.params;
+ const id = Number(params.id);
+ try{
+  await prisma.kanjiWord.delete({
+    where: {id},
+  })
+  console.log(`Deleted KanjiWord with id: ${id}`);
+  return NextResponse.json(null, {status: 200}); //204 No Content
+ }catch(error){
+  console.error("DELETE /api/kanjiWord/[id] error:", error);
+  return NextResponse.json({error: "Internal Server Error"}, {status: 500} );
+ }
+}

@@ -11,7 +11,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -40,7 +40,7 @@ model KanjiChar {
   position  Int    // 1~4번째 위치
 
   wordId    Int
-  word      KanjiWord @relation(fields: [wordId], references: [id])
+  word      KanjiWord @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }

@@ -8,9 +8,10 @@ type Props = {
   onClose: () => void;
   isOpen: boolean;
   onUpdate: (updateWord: KanjiTableRow) => void;
+  onDelete: (id: number) => void;
 };
 
-export default function EditModal({ word, onClose, isOpen,onUpdate }: Props) {
+export default function EditModal({ word, onClose, isOpen,onUpdate, onDelete }: Props) {
   const [editedWord, setEditedWord] = useState(word.word);
   const [editedReading, setEditedReading] = useState(word.reading);
   const [editedMeaning, setEditedMeaning] = useState(word.meaning);
@@ -18,7 +19,7 @@ export default function EditModal({ word, onClose, isOpen,onUpdate }: Props) {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`/api/kanjiWord/${word.id}`, {
+      const response = await fetch(`/api/kanji/${word.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -36,11 +37,6 @@ export default function EditModal({ word, onClose, isOpen,onUpdate }: Props) {
         alert(`저장 실패: ${errorData.error || "알 수 없는 오류"}`);
         return;
       }
-      const data = await response.json();
-      console.log("수정 성공:", data);
-
-      alert("수정 성공");
-
       onUpdate({
         ...word,
         word: editedWord,
@@ -48,12 +44,34 @@ export default function EditModal({ word, onClose, isOpen,onUpdate }: Props) {
         meaning: editedMeaning,
         kanjiList: editedKanjiList,
       });
+      alert("수정 성공");
       onClose(); // 닫기
     } catch (error) {
       console.error("API 호출 에러:", error);
       alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("정말로 삭제하시겠습니까?")) return;
+    try{
+      const response = await fetch(`/api/kanji/${id}`,{
+        method: "DELETE",
+      })
+
+      if(!response.ok){
+        const errorData = await response.json();
+        alert(`삭제 실패: ${errorData.error || "알 수 없는 오류"}`);
+        return;
+      }
+      onDelete(id);
+      alert("삭제 성공");
+      onClose(); // 모달 닫기
+    }catch(error){
+      console.error("삭제 요청 중 오류 발생:", error);
+      alert("삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  }
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
       <div
@@ -125,10 +143,7 @@ export default function EditModal({ word, onClose, isOpen,onUpdate }: Props) {
 
           <div className="flex justify-between items-center pt-4">
             <button
-              onClick={() => {
-                console.log("삭제 요청");
-                onClose();
-              }}
+              onClick={() => handleDelete(word.id)}
               className="px-4 py-2 rounded border border-red-500 text-red-500 hover:bg-red-50"
             >
               삭제

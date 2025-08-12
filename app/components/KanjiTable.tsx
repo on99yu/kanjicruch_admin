@@ -122,10 +122,13 @@ export default function KanjiTable({words: initialWords}: { words: KanjiTableRow
             );
             setModalWord(null);
           }}
+          onDelete={(id) => {setWords((prevWords) => prevWords.filter((w) => w.id !== id))}}
         />
       )}
       {isAddModalOpen && (
-        <AddModal isOpen={isAddModalOpen} onClose={()=> setIsAddModalOpen(false)}/>
+        <AddModal isOpen={isAddModalOpen} 
+          onClose={()=> setIsAddModalOpen(false)}
+          onAdd={(newWord) => setWords((prev)=> [...prev, newWord])}/>
         )}
     </div>
   );

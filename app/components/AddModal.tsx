@@ -6,9 +6,10 @@ import { KanjiTableRow } from "@/types/type";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onAdd : (newWord: KanjiTableRow) => void;
 };
 
-export default function AddKanjiModal({ isOpen, onClose }: Props) {
+export default function AddKanjiModal({ isOpen, onClose, onAdd }: Props) {
   const [newWord, setNewWord] = useState("");
   const [newReading, setNewReading] = useState("");
   const [newMeaning, setNewMeaning] = useState("");
@@ -16,14 +17,31 @@ export default function AddKanjiModal({ isOpen, onClose }: Props) {
     { kanji: "", onyomi: "", kunyomi: "" },
   ]);
 
-  const handleSave = () => {
-    console.log({
-      word: newWord,
-      reading: newReading,
-      meaning: newMeaning,
-      kanjiList: newKanjiList,
-    });
+  const handleSave = async () => {
+   try{
+    const res = await fetch("/api/kanji",{
+      method: "POST",
+      headers:{ "Content-Type": "application/json" },
+      body: JSON.stringify({
+        word: newWord,
+        reading: newReading,
+        meaning: newMeaning,
+        kanjiList: newKanjiList,
+      }),
+    })
+    if (!res.ok){
+      const errorData = await res.json();
+      alert(`저장 실패: ${errorData.error || "알 수 없는 오류"}`);
+      return;
+    }
+    const createdWord = await res.json();
+    onAdd(createdWord)
+    alert("단어 추가 성공")
     onClose(); // 모달 닫기
+   }catch(error){
+    console.error("저장 중 오류 발생:", error);
+    alert("저장 중 오류가 발생했습니다. 다시 시도해주세요.");
+   }
   };
 
   useEffect(()=>{
