@@ -39,6 +39,7 @@ export default function KanjiUploadPage() {
   };
 
   const handleSaveToDB = async () => {
+    setSaving(true);
     console.log("DB 저장 요청됨");
     try {
       const res = await fetch("/api/kanji/upload", {
@@ -54,9 +55,11 @@ export default function KanjiUploadPage() {
       }
 
       const result = await res.json();
+      setSaving(false);
       alert("DB 저장 성공: " + result.count + "개 항목 저장됨");
     } catch (err) {
       console.error("DB 저장 실패:", err);
+      setSaving(false);
       alert("DB 저장 실패: 콘솔 확인");
     }
   }

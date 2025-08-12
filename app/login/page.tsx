@@ -14,7 +14,7 @@ export default function Loginpage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
+    setisLoading(true);
     await signIn("credentials", {
       redirect: false,
       email,
@@ -30,7 +30,7 @@ export default function Loginpage() {
     });
 
     const data = await res.json();
-
+    setisLoading(false);
     if (res.ok) {
       // 로그인 성공
       router.push("/admin");
