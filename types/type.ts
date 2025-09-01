@@ -28,3 +28,20 @@ export type KanjiTableRow ={
     position: number;
   }[];
 }
+
+export type SQLiteKanjiWord = {
+  id: number;
+  word: string;
+  reading: string;
+  meaning: string;
+};
+
+// SQLite에서 읽어오는 KanjiChar
+export type SQLiteKanjiChar = {
+  id: number;
+  kanji: string;
+  onyomi: string;
+  kunyomi: string | null;
+  position: number;
+  wordId: number;
+};
