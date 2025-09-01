@@ -3,41 +3,32 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-
-export default function Loginpage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setisLoading(true);
-    await signIn("credentials", {
+    setIsLoading(true);
+
+    // NextAuth Credentials Provider 로그인
+    const res = await signIn("credentials", {
       redirect: false,
       email,
       password,
     });
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      // 로그인 성공
-      router.push("/admin");
-      setisLoading(false);
+    if (res?.error) {
+      setError(res.error); // 로그인 실패 시 에러 메시지 표시
     } else {
-      setError(data.error || "로그인 실패");
+      router.push("/admin"); // 로그인 성공 시 관리자 페이지로 이동
     }
-    setisLoading(false);
+
+    setIsLoading(false);
   };
 
   return (
@@ -71,7 +62,7 @@ export default function Loginpage() {
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
           disabled={isLoading}
         >
-          {isLoading ? "로그인 중..." :"로그인"}
+          {isLoading ? "로그인 중..." : "로그인"}
         </button>
       </form>
     </div>
