@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// 전체 단어 목록 조회 API
 export async function GET(){
     try{
         const words = await prisma.kanjiWord.findMany({
@@ -20,6 +21,7 @@ export async function GET(){
 
 }
 
+// 단어 추가 API
 export async function POST(request: Request){
   console.log("POST /api/kanjiWord/ 요청 받음");
   try{
