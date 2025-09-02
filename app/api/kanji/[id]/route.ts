@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// 수정 API
 export async function PUT(
   request: Request,
   context: { params: Promise<{ id: string }> }
@@ -61,6 +62,7 @@ export async function PUT(
   }
 }
 
+// 삭제 API
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
  const params = await context.params;
  const id = Number(params.id);

@@ -2,6 +2,7 @@ import { KanjiCSVRow } from "@/types/type";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// 업로드된 단어 입력 API
 export async function POST(req: NextRequest) {
   try {
     const data: KanjiCSVRow[] = await req.json();
