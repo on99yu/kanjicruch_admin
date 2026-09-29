@@ -79,7 +79,7 @@ export default function KanjiUploadPage() {
           </button>
           <input
             type="file"
-            accept=".csv, .xlsx"
+              accept=".csv"
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
@@ -88,6 +88,7 @@ export default function KanjiUploadPage() {
             <button
               type="button"
               onClick={handleSaveToDB}
+              disabled={saving}
               className={`px-4 py-2 mb-4 text-white rounded hover:bg-red-700 
                 ${saving ? "bg-gray-400" : "bg-red-600"}`}
             >

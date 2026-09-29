@@ -15,20 +15,25 @@ export default function LoginPage() {
     setError("");
     setIsLoading(true);
 
-    // NextAuth Credentials Provider 로그인
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: email.trim(),
+        password,
+      });
 
-    if (res?.error) {
-      setError(res.error); // 로그인 실패 시 에러 메시지 표시
-    } else {
-      router.push("/admin"); // 로그인 성공 시 관리자 페이지로 이동
+      if (!res?.ok) {
+        setError("이메일 또는 비밀번호를 확인해주세요.");
+        return;
+      }
+
+      router.replace("/admin");
+      router.refresh();
+    } catch {
+      setError("로그인 서버에 연결하지 못했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -46,6 +51,7 @@ export default function LoginPage() {
           placeholder="이메일"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="username"
           className="w-full mb-3 p-2 border rounded"
           required
         />
@@ -54,12 +60,13 @@ export default function LoginPage() {
           placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
           className="w-full mb-4 p-2 border rounded"
           required
         />
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
           disabled={isLoading}
         >
           {isLoading ? "로그인 중..." : "로그인"}

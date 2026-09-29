@@ -1,15 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { KanjiTableRow } from "@/types/type";
 import EditModal from "./EditModal";
 import AddModal from "./AddModal";
 
-export default function KanjiTable({words: initialWords}: { words: KanjiTableRow[] }) {
+export default function KanjiTable({
+  words: initialWords,
+  startIndex = 0,
+}: {
+  words: KanjiTableRow[];
+  startIndex?: number;
+}) {
   const [words, setWords] = useState<KanjiTableRow[]>(initialWords);
   const [selectedRowId, setSelectedRowId] = useState<number | null>(null);
   const [modalWord, setModalWord] = useState<KanjiTableRow | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  useEffect(() => {
+    setWords(initialWords);
+    setSelectedRowId(null);
+    setModalWord(null);
+    setIsModalOpen(false);
+  }, [initialWords]);
 
   const handleRowClick = (id: number) => {
     setSelectedRowId(id === selectedRowId ? null : id);
@@ -80,7 +93,7 @@ export default function KanjiTable({words: initialWords}: { words: KanjiTableRow
                   )}
                 </td>
                 <td className="border px-2 py-1 whitespace-nowrap">
-                  {index + 1}
+                  {startIndex + index + 1}
                 </td>
                 <td className="border px-2 py-1 whitespace-nowrap">
                   {word.word}

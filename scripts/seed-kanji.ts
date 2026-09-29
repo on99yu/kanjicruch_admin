@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const word = await prisma.kanjiWord.create({
+  await prisma.kanjiWord.create({
     data: {
       word: "貴重",
       reading: "きちょう",
