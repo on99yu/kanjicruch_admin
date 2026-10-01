@@ -10,7 +10,7 @@ const MAX_BODY_BYTES = 5 * 1024 * 1024;
 // 업로드된 단어 입력 API
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

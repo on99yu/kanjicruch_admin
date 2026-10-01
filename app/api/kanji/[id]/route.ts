@@ -11,7 +11,7 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -85,7 +85,7 @@ export async function PUT(
 // 삭제 API
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
  const session = await getServerSession(authOptions);
- if (!session?.user) {
+ if (!session?.user || session.user.role !== "ADMIN") {
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
  }
 

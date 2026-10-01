@@ -42,7 +42,7 @@ export async function GET(){
 // 단어 추가 API
 export async function POST(request: Request){
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
+  if (!session?.user || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
