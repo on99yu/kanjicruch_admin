@@ -79,6 +79,20 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({ progress: progress.map(serializeProgress) });
 }
 
+export async function DELETE(request: NextRequest) {
+  const session = await getAppSession(request);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  await prisma.$transaction([
+    prisma.studyAttempt.deleteMany({ where: { userId: session.userId } }),
+    prisma.userWordProgress.deleteMany({ where: { userId: session.userId } }),
+  ]);
+
+  return NextResponse.json({ ok: true });
+}
+
 export async function POST(request: NextRequest) {
   const session = await getAppSession(request);
   if (!session) {
